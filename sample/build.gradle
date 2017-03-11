@@ -1,14 +1,36 @@
+apply plugin: 'kotlin2js'
+
 group 'net.yslibrary.kotlinjs'
 version '1.0-SNAPSHOT'
 
+//Kotlin transpiled files will be copied to this directory
+def output_dir = "${projectDir}/web"
 
-
-apply plugin: 'kotlin2js'
-
-repositories {
-    mavenCentral()
+//some Kotlin's transpilation settings
+compileKotlin2Js {
+    kotlinOptions.metaInfo = true
+    kotlinOptions.sourceMap = true
+    kotlinOptions.outputFile = "$output_dir/main.js"
+    kotlinOptions.suppressWarnings = true
+    kotlinOptions.verbose = true
 }
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+}
+
+build.doLast {
+    configurations.compile.each { File file ->
+        println(file.toString())
+        copy {
+            includeEmptyDirs = false
+
+            from zipTree(file.absolutePath)
+            into "${projectDir}/web"
+            include { fileTreeElement ->
+                def path = fileTreeElement.path
+                path.endsWith(".js") && (path.startsWith("META-INF/resources/") || !path.startsWith("META-INF/"))
+            }
+        }
+    }
 }
