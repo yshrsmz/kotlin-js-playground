@@ -4,13 +4,13 @@ group 'net.yslibrary.kotlinjs'
 version '1.0-SNAPSHOT'
 
 //Kotlin transpiled files will be copied to this directory
-def output_dir = "${projectDir}/web"
+def outputDir = "${projectDir}/app"
 
 //some Kotlin's transpilation settings
 compileKotlin2Js {
     kotlinOptions.metaInfo = true
     kotlinOptions.sourceMap = true
-    kotlinOptions.outputFile = "$output_dir/main.js"
+    kotlinOptions.outputFile = "$outputDir/main.js"
     kotlinOptions.suppressWarnings = true
     kotlinOptions.verbose = true
 }
@@ -21,16 +21,21 @@ dependencies {
 
 build.doLast {
     configurations.compile.each { File file ->
-        println(file.toString())
         copy {
             includeEmptyDirs = false
 
             from zipTree(file.absolutePath)
-            into "${projectDir}/web"
+            into outputDir
             include { fileTreeElement ->
                 def path = fileTreeElement.path
-                path.endsWith(".js") && (path.startsWith("META-INF/resources/") || !path.startsWith("META-INF/"))
+                def include = path.endsWith(".js") && (path.startsWith("META-INF/resources/") || !path.startsWith("META-INF/"))
+                if (include) println("unzipping $path")
+                return include
             }
         }
     }
+}
+
+clean.doFirst {
+    delete outputDir
 }
