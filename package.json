@@ -1,0 +1,16 @@
+{
+  "name": "kotlin-js-playground",
+  "version": "1.0.0",
+  "description": "Kotlin(JavaScript) playground",
+  "main": "index.js",
+  "repository": "git@github.com:yshrsmz/kotlin-js-playground.git",
+  "author": "yshrsmz <the.phantom.bane+github@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "superagent": "^3.5.0"
+  },
+  "devDependencies": {
+    "ts2kt": "^0.0.12",
+    "typings": "^2.1.0"
+  }
+}
